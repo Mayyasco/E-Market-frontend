@@ -1,0 +1,23 @@
+.tb {
+    background-color: rgb(255, 255, 255);
+    font-size:24px;
+    width: 100%;
+    border-radius: 0;
+    border-width: 1px;
+    padding: 10px;
+    outline: none;
+  }
+
+  .side_image{
+    width: 60px;
+    height: 60px;
+    border-width: 1px;
+    border-style: solid;
+    padding: 10px;
+    border-right: none;
+    background-color: #dbf5f7;
+  }
+  .container{
+    display: flex;
+  margin-top: 5px;
+}
