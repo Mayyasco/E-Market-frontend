@@ -1,6 +1,6 @@
 import React from 'react';
 import MainHeader from '../components/MainHeader';
-import SignUp from '../components/SignUp';
+import SignUpdate from '../components/SignUpdate';
 import { useContext, useRef, useState, useEffect } from 'react';
 import aucontext from '../au-context';
 import AddCar from './AddCar';
@@ -23,9 +23,17 @@ function Main(props) {
                 headers: { 'Content-Type': 'application/json' },
             };
             fetch('/emarket/mine/' + j, requestOptions)
-                .then(response => response.json())
+                .then(response => {
+                    if (response.ok)
+                        return response.json();
+                    else {
+                        alert("something went wrong please try again later");
+                        return -1;
+                    }
+                })
                 .then(data => {
-                    setChild_state(<Mine my_list={data} icon={"m"} />)
+                    if (data !== -1)
+                        setChild_state(<Mine my_list={data} icon={"m"} />);
                 });
         }
     }, []);
@@ -36,10 +44,19 @@ function Main(props) {
             headers: { 'Content-Type': 'application/json' },
         };
         fetch('/emarket/getuser/' + id, requestOptions)
-            .then(response => response.json())
+            .then(response => {
+                if (response.ok)
+                    return response.json();
+                else {
+                    alert("something went wrong please try again later");
+                    return -1;
+                }
+            })
             .then(data => {
-                setChild_state(<SignUp t={"Update your info"} b={"Update"} su={"u"} ref={signRef} />);
-                signRef.current.updateinput(data.name, data.email, data.password, data.address, data.phone);
+                if (data !== -1) {
+                    setChild_state(<SignUpdate ref={signRef} />);
+                    signRef.current.updateinput(data.name, data.email, data.password, data.address, data.phone);
+                }
             });
 
     }
@@ -61,9 +78,17 @@ function Main(props) {
             headers: { 'Content-Type': 'application/json' },
         };
         fetch('/emarket/mine/' + ctx.log_id, requestOptions)
-            .then(response => response.json())
+            .then(response => {
+                if (response.ok)
+                    return response.json();
+                else {
+                    alert("something went wrong please try again later");
+                    return -1;
+                }
+            })
             .then(data => {
-                setChild_state(<Mine my_list={data} icon={"m"} />)
+                if (data !== -1)
+                    setChild_state(<Mine my_list={data} icon={"m"} />)
             });
     }
     function fav() {
@@ -72,9 +97,19 @@ function Main(props) {
             headers: { 'Content-Type': 'application/json' },
         };
         fetch('/emarket/fav/' + ctx.log_id, requestOptions)
-            .then(response => response.json())
-            .then(data =>
-                setChild_state(<Fav my_list={data} icon={"f"} />));
+            .then(response => {
+                if (response.ok)
+                    return response.json();
+                else {
+                    alert("something went wrong please try again later");
+                    return -1;
+                }
+            })
+            .then(data => {
+                if (data !== -1)
+                    setChild_state(<Fav my_list={data} icon={"f"} />);
+
+            });
     }
     return (
         <div>

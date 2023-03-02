@@ -1,4 +1,4 @@
-import { React, useState, useContext, useRef } from 'react';
+import { React, useState, useContext, useRef, useEffect } from 'react';
 import classes from './HouseItem.module.css';
 import CardItem from './CardItem';
 import im from './images/house.jpg';
@@ -7,6 +7,7 @@ import baths from './images/baths.png';
 import beds from './images/beds.png';
 import heart_fill from './images/heart_fill.png';
 import heart_empty from './images/heart_empty.png';
+import loading from './images/loading.png';
 import aucontext from '../au-context';
 import del from './images/del.png';
 import upd from './images/upd.png';
@@ -18,39 +19,79 @@ const HouseItem = (props) => {
     , props.baths, props.beds, props.area, props.fo, props.other, props.zip]);
   const houseRef = useRef();
   const housevRef = useRef();
+  const [img, setImg] = useState(im);
   const [overlay_h, setOverlay_h] = useState("0");
   const [overlay_hv, setOverlay_hv] = useState("0");
   const ctx = useContext(aucontext);
-  const [h, seth] = useState(heart_fill);
+  const [h, seth] = useState(loading);
   const house_id = props.id;
   const user_id = ctx.log_id;
   let icon = "";
+  //--------------------------------------------------------------
+  useEffect(() => {
+    fetch("/emarket/getimage/" + props.id + "/house")
+      .then(response => {
+        if (response.ok)
+          return response.blob();
+        else {
+          //alert("could not retrieve the image for this car " + props.make + " " + props.model + " " + props.trim);
+          return -1;
+        }
+      })
+      .then(data => {
+        if (data !== -1) {
+          const imageObjectURL = URL.createObjectURL(data);
+          setImg(imageObjectURL);
+        }
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [info]);
+  //--------------------------------------------------------------
   if (props.icon === "m")
     icon = <div><img src={del} alt="delete" onClick={dl} className={classes.del} />
       <img src={upd} alt="update" onClick={up} className={classes.upd} /></div>;
-  else {
+  else
     icon = <img src={h} alt="heart" onClick={heart} className={classes.heart} />;
-    //------------------------------------------
-    if (!props.fa) {
+  //------------------------------------------
+  useEffect(() => {
+
+    if (props.icon !== "m") {
       fetch("/emarket/chechlikehouse?id_house=" + house_id + "&id_user=" + user_id)
-        .then(response => response.json())
+        .then(response => {
+          if (response.ok)
+            return response.json();
+          else {
+            alert("something went wrong please try again later");
+            return -1;
+          }
+        })
         .then(data => {
-          let tmp = JSON.parse(data);
-          if (tmp === 0) seth(heart_empty);
-          else seth(heart_fill);
+          if (data !== -1) {
+            let tmp = JSON.parse(data);
+            if (tmp === 0) seth(heart_empty);
+            else seth(heart_fill);
+          }
         });
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   //------------------------------------------
   function dl() {
     const response = window.confirm("Are you sure you want to delete the house?");
     if (response) {
       const id = props.id;
       let houses = [...props.houselist];
-      fetch('/emarket/deletehouse/' + id, { method: 'DELETE' });
-      const removeIndex = houses.findIndex(item => item.id === id);
-      houses.splice(removeIndex, 1);
-      props.onDelete(houses);
+      fetch('/emarket/deletehouse/' + id, { method: 'DELETE' })
+        .then(response => {
+          if (!response.ok)
+            alert("something went wrong please try again later");
+          else {
+            const removeIndex = houses.findIndex(item => item.id === id);
+            houses.splice(removeIndex, 1);
+            props.onDelete(houses);
+          }
+        });
     }
   }
   function setAllInfo(inf) {
@@ -71,7 +112,7 @@ const HouseItem = (props) => {
     housevRef.current.updateinput(
       info[0], info[3], info[2], info[1],
       info[10], info[4], info[7], info[6],
-      info[9], info[8], info[5]
+      info[9], info[8], info[5], img
     );
   }
   function update_h() {
@@ -88,12 +129,20 @@ const HouseItem = (props) => {
   }
   function heart() {
     if (h === heart_empty) {
-      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=add");
-      seth(heart_fill);
+      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=add", { method: 'POST' })
+        .then(response => {
+          if (!response.ok)
+            alert("something went wrong please try again later");
+          else seth(heart_fill);
+        });
     }
     else {
-      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=del");
-      seth(heart_empty);
+      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=del", { method: 'POST' })
+        .then(response => {
+          if (!response.ok)
+            alert("something went wrong please try again later");
+          else seth(heart_empty);
+        });
       if (props.ty === "f") {
         const id = props.id;
         let houses = [...props.houselist];
@@ -117,7 +166,7 @@ const HouseItem = (props) => {
       <CardItem>
         <div className={classes.card}>
           {icon}
-          <img src={im} alt="House" className={classes.im} onClick={view} />
+          <img src={img} alt="House" className={classes.im} onClick={view} />
           <div className={classes.item_description}>
             <div style={{ fontSize: "22px" }}>{info[0]} {info[1]}</div>
             <div style={{ fontSize: "22px" }}>{info[2]} {info[3]}</div><br />

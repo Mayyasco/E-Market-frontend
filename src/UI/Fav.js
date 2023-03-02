@@ -40,7 +40,6 @@ const Fav = (props) => {
                         trans={caritem.trans}
                         other={caritem.other}
                         cond={caritem.cond}
-                        fa={true}
                     />
                 ))}
             </ul>
@@ -65,7 +64,6 @@ const Fav = (props) => {
                         fo={houseitem.fo}
                         other={houseitem.other}
                         zip={houseitem.zip}
-                        fa={true}
                     />
                 ))}
             </ul>

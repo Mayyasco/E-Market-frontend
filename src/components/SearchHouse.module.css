@@ -1,3 +1,10 @@
+.span{
+  color :red;
+  font-size:20px;
+  align-self: start;
+  grid-column-start: 1;
+  grid-column-end: 5;
+}
 .button {
     font: inherit;
     border: 5 solid #084b4f;
@@ -53,7 +60,7 @@
   .carddad1{
     width: 90%;
     display: grid;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
     grid-template-columns: 40% 40% 20%;
     
   }
@@ -61,26 +68,25 @@
     width: 90%;
     display: grid;
     grid-template-columns: 14% 25% 15% 16% 14% 16%;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
   }
   
   .carddad3{
     width: 90%;
     display: grid;
     grid-template-columns: 42% 15% 43%;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
   }
   .carddad4{
     width: 90%;
     display: grid;
     grid-template-columns: 100%;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
   }
   .label{
     font-size:20px;
     text-align:center;
-    vertical-align: middle;
-    
+    line-height: 35px;
   }
   
   .label3{

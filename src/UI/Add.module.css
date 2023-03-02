@@ -1,3 +1,53 @@
+.close_button
+{
+  width: 8%;
+    height: 40px;
+    padding: 0.5rem;
+    border-radius: 14px;
+    border-color: #ff0000;
+    background: #ff0000;
+    margin-bottom: 10px;
+    font-size: 30px;
+     text-align: center;
+     line-height: 19px;
+
+}
+.im{
+    width: 100%;
+    height: 300px;
+    border: 2px solid rgb(2, 153, 176);
+    padding: 0.5rem;
+    border-radius: 12px;
+}
+input::file-selector-button {
+  font: inherit;
+  border: 5 solid #084b4f;
+  background: #dbf5f7;
+  color: rgb(0, 0, 0);
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+  font-size: 22px;
+  border-radius: 5px;
+  margin-top: 0px;
+  box-shadow: 0 0 2px #000000;
+  width: 60%;
+}
+
+input::file-selector-button:hover,
+input::file-selector-button:active {
+  background: #a2edf1;
+  border-color: #95b7b9;
+  box-shadow: 0 0 10px #7bacd3;
+}
+
+input::file-selector-button:focus {
+  outline: none;
+}
+
+.span{
+  color :red;
+  font-size:20px;
+}
 .cb {
     border-radius: 5px;
     background-color: rgb(255, 255, 255);

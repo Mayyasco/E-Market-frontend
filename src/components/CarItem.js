@@ -1,10 +1,11 @@
-import { React, useState, useContext, useRef } from 'react';
+import { React, useState, useContext, useRef, useEffect } from 'react';
 import classes from './CarItem.module.css';
 import CardItem from './CardItem';
 import im from './images/car_image.jpg';
 import mil from './images/mil.png';
 import addr from './images/addr.png';
 import heart_fill from './images/heart_fill.png';
+import loading from './images/loading.png';
 import heart_empty from './images/heart_empty.png';
 import del from './images/del.png';
 import upd from './images/upd.png';
@@ -17,38 +18,76 @@ const CarItem = (props) => {
     , props.model, props.trim, props.body_type, props.trans, props.other, props.cond]);
   const carRef = useRef();
   const carvRef = useRef();
+  const [img, setImg] = useState(im);
   const [overlay_c, setOverlay_c] = useState("0");
   const [overlay_cv, setOverlay_cv] = useState("0");
   const ctx = useContext(aucontext);
-  const [h, seth] = useState(heart_fill);
+  const [h, seth] = useState(loading);
   const car_id = props.id;
   const user_id = ctx.log_id;
   let icon = "";
+  //--------------------------------------------------------------
+  useEffect(() => {
+    fetch("/emarket/getimage/" + props.id + "/car")
+      .then(response => {
+        if (response.ok)
+          return response.blob();
+        else {
+          //alert("could not retrieve the image for this car " + props.make + " " + props.model + " " + props.trim);
+          return -1;
+        }
+      })
+      .then(data => {
+        if (data !== -1) {
+          const imageObjectURL = URL.createObjectURL(data);
+          setImg(imageObjectURL);
+        }
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [info]);
+  //--------------------------------------------------------------
   if (props.icon === "m")
     icon = <div><img src={del} alt="delete" onClick={dl} className={classes.del} />
       <img src={upd} alt="update" onClick={up} className={classes.upd} /></div>;
-  else {
+  else
     icon = <img src={h} alt="heart" onClick={heart} className={classes.heart} />;
-    //------------------------------------------
-    if (!props.fa) {
-      fetch("/emarket/chechlikecar?id_car=" + car_id + "&id_user=" + user_id)
-        .then(response => response.json())
-        .then(data => {
+  //------------------------------------------
+  useEffect(() => {
+    fetch("/emarket/chechlikecar?id_car=" + car_id + "&id_user=" + user_id)
+      .then(response => {
+        if (response.ok)
+          return response.json();
+        else {
+          //alert("something went wrong please try again later");
+          return -1;
+        }
+      })
+      .then(data => {
+        if (data !== -1) {
           let tmp = JSON.parse(data);
           if (tmp === 0) seth(heart_empty);
           else seth(heart_fill);
+        }
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  //------------------------------------------
+  function heart() {
+    if (h === heart_empty) {
+      fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=add", { method: 'POST' })
+        .then(response => {
+          if (!response.ok)
+            alert("something went wrong please try again later");
+          else seth(heart_fill);
         });
     }
-  }
-  //------------------------------------------
-  async function heart() {
-    if (h === heart_empty) {
-      await fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=add");
-      seth(heart_fill);
-
-    }
     else {
-      await fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=del");
+      fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=del", { method: 'POST' })
+        .then(response => {
+          if (!response.ok)
+            alert("something went wrong please try again later");
+          else seth(heart_empty);
+        });
       seth(heart_empty);
       if (props.ty === "f") {
         const id = props.id;
@@ -64,11 +103,16 @@ const CarItem = (props) => {
     if (response) {
       const id = props.id;
       let cars = [...props.carlist];
-      fetch('/emarket/deletecar/' + id, { method: 'DELETE' });
-      const removeIndex = cars.findIndex(item => item.id === id);
-      cars.splice(removeIndex, 1);
-      props.onDelete(cars);
-
+      fetch('/emarket/deletecar/' + id, { method: 'DELETE' })
+        .then(response => {
+          if (!response.ok)
+            alert("something went wrong please try again later");
+          else {
+            const removeIndex = cars.findIndex(item => item.id === id);
+            cars.splice(removeIndex, 1);
+            props.onDelete(cars);
+          }
+        })
     }
   }
   function setAllInfo(inf) {
@@ -88,7 +132,7 @@ const CarItem = (props) => {
     carvRef.current.updateinput(
       info[4], info[5], info[6], info[0],
       info[1], info[10], info[7], info[3],
-      info[9], info[8], info[2]
+      info[9], info[8], info[2], img
     );
   }
   function update_c() {
@@ -117,7 +161,7 @@ const CarItem = (props) => {
 
         <div className={classes.card}>
           {icon}
-          <img src={im} alt="Car" className={classes.im} onClick={view} />
+          <img src={img} alt="Car" className={classes.im} onClick={view} />
           <div className={classes.car_item_description}>
             <div style={{ fontSize: "22px" }}>{info[4] + " " + info[5] + " " + info[6]}</div>
             <div style={{ fontSize: "20px" }}>{info[0]}</div><br />

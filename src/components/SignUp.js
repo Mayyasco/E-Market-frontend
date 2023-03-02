@@ -1,5 +1,5 @@
 import React from 'react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Card from './Card';
 import INSign from './INSign';
 import classes from '../UI/SignUser.module.css';
@@ -28,50 +28,60 @@ const SignUp = forwardRef((props, ref) => {
             }
         };
     });
+    const [validation, setValidation] = useState(["", "", ""]);
     const ctx = useContext(aucontext);
     const navigate = useNavigate();
+
     function handleSubmit(ref_name, ref_email, ref_password,
         ref_address, ref_phone, ref_password2, su, e) {
         e.preventDefault();
-        if (su === "s") {//update or sign up
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    "name": ref_name.current.value,
-                    "email": ref_email.current.value,
-                    "password": ref_password.current.value,
-                    "address": ref_address.current.value,
-                    "phone": ref_phone.current.value,
-                })
-            };
-            fetch('/emarket/adduser', requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                    localStorage.setItem("id3r5", data.id);
-                    ctx.set_id(data.id);
-                    alert('you signed up successfully');
-                    navigate("/main");
-                });
-        }
-        else {
-            const requestOptions = {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    "name": ref_name.current.value,
-                    "email": ref_email.current.value,
-                    "password": ref_password.current.value,
-                    "address": ref_address.current.value,
-                    "phone": ref_phone.current.value,
-                })
-            };
-            let id = ctx.log_id;
-            fetch("/emarket/updateuser/" + id, requestOptions);
-            alert('your information has been updated successfully');
-        }
-
+        let password = ref_password.current.value;
+        if (ref_password.current.value !== ref_password2.current.value) { password = ""; }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "name": ref_name.current.value,
+                "email": ref_email.current.value,
+                "password": password,
+                "address": ref_address.current.value,
+                "phone": ref_phone.current.value,
+            })
+        };
+        fetch('/emarket/adduser', requestOptions)
+            .then(response => {
+                if (response.ok || response.status === 400)
+                    return response.json();
+                else {
+                    alert("something went wrong please try again later");
+                    return -1;
+                }
+            })
+            .then(data => {
+                if (data !== -1) {
+                    let val = ["", "", ""];
+                    if (!data.id) {
+                        if (data.name)
+                            val[0] = data.name;
+                        if (data.email)
+                            val[1] = data.email;
+                        if (data.password)
+                            val[2] = data.password;
+                        if (JSON.stringify(val) === JSON.stringify(["", "", ""]))
+                            alert("something went wrong please try again later");
+                        setValidation(val);
+                    }
+                    else {
+                        localStorage.setItem("id3r5", data.id);
+                        ctx.set_id(data.id);
+                        alert('you signed up successfully');
+                        navigate("/main");
+                    }
+                }
+            });
     }
+
+
     const ref_name = React.createRef();
     const ref_email = React.createRef();
     const ref_password = React.createRef();
@@ -83,8 +93,11 @@ const SignUp = forwardRef((props, ref) => {
         <Card >
             <label className={classes.labelhead}>{props.t}</label>
             <INSign placeholder='Name' alt='name' src={name_image} ref={ref_name} value={props.value_name} />
+            <span className={classes.span}>{validation[0]}</span>
             <INSign placeholder='Email' alt='email' type="email" src={email_image} ref={ref_email} value={props.value_email} />
+            <span className={classes.span}>{validation[1]}</span>
             <INSign placeholder='Password' alt='password' type="password" src={password_image} ref={ref_password} value={props.value_password} />
+            <span className={classes.span}>{validation[2]}</span>
             <INSign placeholder='re-enter password' alt='re-enter password' type="password" src={password_image} ref={ref_password2} value={props.value_password} />
             <INSign placeholder='Address' alt='address' src={address_image} ref={ref_address} value={props.value_address} />
             <INSign placeholder='Phone' alt='phone' src={phone_image} ref={ref_phone} value={props.value_phone} />

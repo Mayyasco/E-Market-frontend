@@ -1,18 +1,19 @@
 import React from 'react';
+import { useState } from 'react';
 import Card from '../components/Card';
 import IN from '../components/IN';
+import im from '../components/images/car_image.jpg';
 import classes from './Add.module.css';
 import { forwardRef, useImperativeHandle } from 'react';
 import Button from '../components/Button';
 
 const ViewCar = forwardRef((props, ref) => {
+  const [img, setImg] = useState(im);
   useImperativeHandle(ref, () => {
     return {
-      updateinput: (m, mod, t, y, mi, c, b, co, o, tr, a) => {
+      updateinput: (m, mod, t, y, mi, c, b, co, o, tr, a, img) => {
         ref_make.current.value = m;
-        ref_make.current.disabled = false;
-        ref_make.current.focus();
-        ref_make.current.disabled = true;
+        ref_scroll.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
         ref_model.current.value = mod;
         ref_year.current.value = y;
         ref_condition.current.value = c;
@@ -23,6 +24,7 @@ const ViewCar = forwardRef((props, ref) => {
         ref_other_details.current.value = o;
         ref_trim.current.value = t;
         ref_address.current.value = a;
+        setImg(img);
       }
     };
   });
@@ -37,9 +39,12 @@ const ViewCar = forwardRef((props, ref) => {
   const ref_other_details = React.createRef();
   const ref_trans = React.createRef();
   const ref_address = React.createRef();
+  const ref_scroll = React.createRef();
   return (
     <div className="App" disabled={true}>
       <Card>
+        <button className={classes.close_button} onClick={props.cancel} ref={ref_scroll}>X</button>
+        <img src={img} alt="Car" className={classes.im} />
         <IN label='make' ref={ref_make} disabled={true} />
         <IN label='model' ref={ref_model} disabled={true} />
         <IN label='trim' ref={ref_trim} disabled={true} />
