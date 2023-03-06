@@ -15,8 +15,8 @@ const Fav = (props) => {
     function onLike_h(houses) {
         setHouses(houses);
     }
-    let headLabelCar = "Your favorite Car/s ( " + cars.length + " )";
-    let headLabelHouse = "Your favorite House/s ( " + houses.length + " )";
+    let headLabelCar = "Your favorite Car/s (" + cars.length + ")";
+    let headLabelHouse = "Your favorite House/s (" + houses.length + ")";
     return (
         <div className={classes.card}>
             <label className={classes.labelhead}>{headLabelCar}</label>

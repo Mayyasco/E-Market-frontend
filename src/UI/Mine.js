@@ -12,8 +12,8 @@ const Mine = (props) => {
     function del_house(houses) {
         setHouses(houses);
     }
-    let headLabelCar = "Your Car/s ( " + cars.length + " )";
-    let headLabelHouse = "Your House/s ( " + houses.length + " )";
+    let headLabelCar = "Your Car/s (" + cars.length + ")";
+    let headLabelHouse = "Your House/s (" + houses.length + ")";
     return (
 
         <div className={classes.card}>

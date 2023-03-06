@@ -11,7 +11,7 @@ const SearchHouselist = (props) => {
     setStartSearch(1);
   }
   const icon = "f";
-  let headLabel = "Result ( " + houses.length + " )";
+  let headLabel = "Result (" + houses.length + ")";
   let lab;
   if (houses.length === 0 && startSearch === 0)
     lab = <div></div>;

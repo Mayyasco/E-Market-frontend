@@ -116,8 +116,9 @@ const AddHouse = (props) => {
                   else {
                     alert('new house has been added successfully but an error in uploading the image you can add later');
                   }
-                  setValidation(["", "", "", "", "", "", "", ""]);
                   ref_image.current.value = '';
+                  setValidation(["", "", "", "", "", "", "", ""]);
+
                 });
             }
             //--------------------------------------------
@@ -134,7 +135,7 @@ const AddHouse = (props) => {
     <div className="App">
       <Card>
         <label className={classes.labelhead}> Add House</label>
-        <IN label='building number *' ref={ref_bn} />
+        <IN label='building # *' ref={ref_bn} />
         <span className={classes.span}>{validation[6]}</span>
         <IN label='street *' ref={ref_street} />
         <span className={classes.span}>{validation[7]}</span>
@@ -158,8 +159,8 @@ const AddHouse = (props) => {
         <span className={classes.span}>{validation[3]}</span>
         <label className={classes.label}> other details</label>
         <textarea className={classes.cb2} ref={ref_other_details}></textarea>
-        <label className={classes.label} style={{ marginTop: "12px" }}> image:</label>
-        <input type="file" accept="image/png, image/jpeg" ref={ref_image} />
+        <label className={classes.label} style={{ marginTop: "0px" }}> image:</label>
+        <input type="file" accept="image/png, image/jpeg" ref={ref_image} size="60" />
         <Button onClick={(e) => handleSubmit(
           ref_bn, ref_state, ref_city,
           ref_street, ref_zip, ref_area,

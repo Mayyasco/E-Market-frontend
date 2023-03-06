@@ -1,25 +1,29 @@
 .button {
-    font: inherit;
-    border: 5 solid #084b4f;
-    background: #dbf5f7;
-    color: rgb(0, 0, 0);
-    padding: 0.25rem 1rem;
-    cursor: pointer;
-    font-size: 25px;
-    border-radius: 5px;
-    margin-top: 25px;
-    box-shadow: 0 0 2px #000000;
-    width: 100%;
+  font: inherit;
+  border: 5 solid #084b4f;
+  background: #dbf5f7;
+  color: rgb(0, 0, 0);
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+  font-size: 25px;
+  border-radius: 5px;
+  margin-top: 25px;
+  box-shadow: 0 0 2px #000000;
+  width: 100%;
+}
+
+.button:hover,
+.button:active {
+  background: #a2edf1;
+  border-color: #95b7b9;
+  box-shadow: 0 0 10px #7bacd3;
+}
+
+.button:focus {
+  outline: none;
+}
+@media screen and (max-width: 500px) {
+  .button {
+    font-size: 20px;
   }
-  
-  .button:hover,
-  .button:active {
-    background: #a2edf1;
-    border-color: #95b7b9;
-    box-shadow: 0 0 10px #7bacd3;
-  }
-  
-  .button:focus {
-    outline: none;
-  }
-  
+}

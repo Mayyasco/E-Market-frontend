@@ -11,7 +11,7 @@ const SearchCarlist = (props) => {
     setStartSearch(1);
   }
   const icon = "f";
-  let headLabel = "Result ( " + cars.length + " )";
+  let headLabel = "Result (" + cars.length + ")";
   let lab;
   if (cars.length === 0 && startSearch === 0)
     lab = <div></div>;

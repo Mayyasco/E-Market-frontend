@@ -90,7 +90,7 @@ const MainHeader = (props) => {
         navigate("/");
     }
     return (
-        <div style={{ backgroundColor: "rgb(82, 225, 244)", padding: "10px" }}>
+        <div style={{ backgroundColor: "rgb(82, 225, 244)", padding: "10px", minWidth: "280px" }}>
             <div style={{ backgroundColor: "rgb(234 252 247)", borderRadius: "10px" }}>
                 <nav className="navbar bg-body-tertiary">
                     <div className="container-fluid">

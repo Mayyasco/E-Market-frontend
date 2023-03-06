@@ -1,10 +1,10 @@
-.overlay { 
+.overlay {
   height: 100%;
   width: 100%;
-  position: fixed; 
-  z-index: 1; 
-  background-color: rgba(140, 242, 248, 0.5); 
-  overflow-x: hidden; 
+  position: fixed;
+  z-index: 1;
+  background-color: rgba(140, 242, 248, 0.5);
+  overflow-x: hidden;
   transition: 0.5s;
   left: 0;
   top: 0;
@@ -13,80 +13,90 @@
 .overlayContent {
   position: relative;
   top: 25%;
-  width: 100%; 
+  width: 100%;
   text-align: center;
-  margin-top: 30px; 
+  margin-top: 30px;
 }
-.card{
-    display: flex;
-    align-items: center;
-    padding: 0;
-    margin: 0;
-    position: relative;
+.card {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.heart {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  width: 30px;
+  height: 30px;
+}
+.del {
+  position: absolute;
+  top: 0%;
+  right: 36px;
+  width: 30px;
+  height: 30px;
+}
+.upd {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  width: 30px;
+  height: 30px;
+}
+.heart:hover,
+.del:hover,
+.upd:hover,
+.im:hover {
+  cursor: pointer;
+}
+.car_item_description {
+  font-size: 1rem;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  padding: 0.5rem;
+  /* width: 47%; */
+  text-align: left;
+  margin-left: 15px;
+}
+.car_item_price {
+  /* width: 20%; */
+  font-size: 20px;
+  word-wrap: break-word;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  background-color: #9af8e8;
+  padding: 0.5rem;
+  border-radius: 12px;
+  text-align: center;
+  vertical-align: middle;
+  border: 2px solid rgb(2, 153, 176);
+  margin-left: auto;
+}
+.im {
+  width: 220px;
+  height: 170px;
+  border: 2px solid rgb(2, 153, 176);
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+.inf {
+  font-size: 17px;
+  margin-bottom: 5px;
+  display: flex;
+}
+.ic {
+  width: 20px;
+  height: 20px;
+  padding-right: 4px;
+}
+@media (max-width: 700px) {
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .heart{
-    position: absolute;
-    top: 0%;
-    right: 0%;
-    width:40px;
-    height: 40px;
+  .im {
+    margin-top: 35px;
   }
-  .del{
-    position: absolute;
-    top: 0%;
-    right: 6%;
-    width:5%;
-    height: 40px;
-  }
-  .upd{
-    position: absolute;
-    top: 0%;
-    right: 0%;
-    width:5%;
-    height: 40px;
-  }
-  .heart:hover,.del:hover,.upd:hover,.im:hover
-  {
-    cursor: pointer;
-  }
-  .car_item_description{
-    font-size: 1rem;
-    font-weight: bold;
-    color: rgb(0, 0, 0);
-    padding: 0.5rem;
-    width: 47%;
-    text-align:left;
-    margin-left: 15px;
-  }
-  .car_item_price {
-    width:20%;
-    font-size: 20px;
-    word-wrap: break-word;
-    font-weight: bold;
-    color: rgb(0, 0, 0);
-    background-color: #9af8e8;
-    padding: 0.5rem;
-    border-radius: 12px; 
-    text-align: center ;
-    vertical-align: middle;
-    border: 2px solid rgb(2, 153, 176);
-  }
-  .im{
-    width: 30%;
-    height: 170px;
-    border: 2px solid rgb(2, 153, 176);
-    padding: 0.5rem;
-    border-radius: 12px;
-  }
-  .inf{
-    font-size:17px;
-   margin-bottom: 5px; 
-   display: flex;
-   
-  }
-  .ic{
-    width:20px;
-    height: 20px;
-    padding-right: 4px;
-    
-  }
+}

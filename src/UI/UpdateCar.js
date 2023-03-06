@@ -175,7 +175,7 @@ const UpdateCar = forwardRef((props, ref) => {
         <IN label='address' ref={ref_address} />
         <label className={classes.label}> other details</label>
         <textarea className={classes.cb2} ref={ref_other_details}></textarea>
-        <label className={classes.label} style={{ marginTop: "12px" }}> update the image:</label>
+        <label className={classes.label} style={{ marginTop: "0px" }}> update the image:</label>
         <input type="file" accept="image/png, image/jpeg" ref={ref_image} />
         <div style=
           {{ display: "grid", gridTemplateColumns: "49% 2% 49%" }}>

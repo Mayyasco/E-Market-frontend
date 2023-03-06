@@ -172,18 +172,18 @@ const HouseItem = (props) => {
             <div style={{ fontSize: "22px" }}>{info[2]} {info[3]}</div><br />
             <div className={classes.inf}>
               <img src={area} alt="area" className={classes.ic} />
-              <div>{info[7]} ftsqr</div>
+              <div style={{ fontWeight: "normal" }}>{info[7]} SF</div>
             </div>
             <div className={classes.inf}>
               <img src={beds} alt="beds" className={classes.ic} />
-              <div>{info[6]}</div>
+              <div style={{ fontWeight: "normal" }}>{info[6]}</div>
             </div>
             <div className={classes.inf}>
               <img src={baths} alt="baths" className={classes.ic} />
-              <div>{info[5]}</div>
+              <div style={{ fontWeight: "normal" }}>{info[5]}</div>
             </div>
           </div>
-          <div className={classes.item_price}>$ {info[4]}</div>
+          <div className={classes.item_price}>{info[4]} $</div>
         </div>
       </CardItem>
     </div>

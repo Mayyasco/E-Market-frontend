@@ -6,5 +6,6 @@
     padding: 2rem;
     width: 90%;
      max-width: 40rem;
+     min-width: 280px;
   }
   

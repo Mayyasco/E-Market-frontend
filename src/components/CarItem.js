@@ -167,14 +167,14 @@ const CarItem = (props) => {
             <div style={{ fontSize: "20px" }}>{info[0]}</div><br />
             <div className={classes.inf}>
               <img src={mil} alt="mileage" className={classes.ic} />
-              <div>{info[1]}</div>
+              <div style={{ fontWeight: "normal" }}>{info[1]}</div>
             </div>
             <div className={classes.inf}>
               <img src={addr} alt="address" className={classes.ic} />
-              <div>{info[2]}</div>
+              <div style={{ fontWeight: "normal" }}>{info[2]}</div>
             </div>
           </div>
-          <div className={classes.car_item_price}>$ {info[3]}</div>
+          <div className={classes.car_item_price}>{info[3]} $</div>
         </div>
       </CardItem>
     </div>

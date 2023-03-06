@@ -1,23 +1,27 @@
-.close_button
-{
-  width: 8%;
-    height: 40px;
-    padding: 0.5rem;
-    border-radius: 14px;
-    border-color: #ff0000;
-    background: #ff0000;
-    margin-bottom: 10px;
-    font-size: 30px;
-     text-align: center;
-     line-height: 19px;
-
+.close_button {
+  max-width: 40px;
+  max-height: 40px;
+  height: auto;
+  width: auto;
+  padding: 0.5rem;
+  border-radius: 14px;
+  border-color: #ff0000;
+  background: #ff0000;
+  margin-bottom: 10px;
+  font-size: 30px;
+  text-align: center;
+  line-height: 19px;
 }
-.im{
-    width: 100%;
-    height: 300px;
-    border: 2px solid rgb(2, 153, 176);
-    padding: 0.5rem;
-    border-radius: 12px;
+.im {
+  width: 100%;
+  max-height: 300px;
+  height: auto;
+  border: 2px solid rgb(2, 153, 176);
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+input[type="file"] {
+  width: 100%;
 }
 input::file-selector-button {
   font: inherit;
@@ -30,7 +34,8 @@ input::file-selector-button {
   border-radius: 5px;
   margin-top: 0px;
   box-shadow: 0 0 2px #000000;
-  width: 60%;
+  width: 40%;
+  overflow: visible;
 }
 
 input::file-selector-button:hover,
@@ -44,63 +49,89 @@ input::file-selector-button:focus {
   outline: none;
 }
 
-.span{
-  color :red;
-  font-size:20px;
+.span {
+  color: red;
+  font-size: 20px;
 }
 .cb {
-    border-radius: 5px;
-    background-color: rgb(255, 255, 255);
-    font-size:24px;
-    padding: 5px;
-    width: 100%;
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255);
+  font-size: 24px;
+  padding: 5px;
+  width: 100%;
+}
 
-  }
-  
-  .cb:hover,
-  .cb:active {
-    outline: none;
-    border-color: #9ecaed;
-    box-shadow: 0 0 10px #9ecaed;
-  }
-  .cb:focus {
-    outline: none;
-    border-color: #9ecaed;
-    border-bottom-width:5px;
-    border-bottom-color:#1291f9 ;
-  }
-  .label{
-    display: block;
-    font-size:24px;
-    margin-top: 20px;
-  }
+.cb:hover,
+.cb:active {
+  outline: none;
+  border-color: #9ecaed;
+  box-shadow: 0 0 10px #9ecaed;
+}
+.cb:focus {
+  outline: none;
+  border-color: #9ecaed;
+  border-bottom-width: 5px;
+  border-bottom-color: #1291f9;
+}
+.label {
+  display: block;
+  font-size: 24px;
+  margin-top: 6px;
+}
 
+.cb2 {
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255);
+  font-size: 24px;
+  padding: 5px;
+  width: 100%;
+}
+
+.cb2:hover,
+.cb2:active {
+  outline: none;
+  border-color: #9ecaed;
+  box-shadow: 0 0 10px #9ecaed;
+}
+.cb2:focus {
+  outline: none;
+  border-color: #9ecaed;
+  border-bottom-width: 5px;
+  border-bottom-color: #1291f9;
+}
+.labelhead {
+  display: block;
+  font-size: 27px;
+  border-radius: 5px;
+  background-color: rgb(82, 225, 244);
+  padding: 5px;
+  text-align: center;
+}
+@media (min-width: 360px) and (max-width: 480px) {
+  input::file-selector-button {
+    width: 55%;
+  }
+}
+@media screen and (max-width: 360px) {
+  input::file-selector-button {
+    width: 75%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  input::file-selector-button,
+  .span {
+    font-size: 18px;
+  }
+  .labelhead {
+    font-size: 24px;
+  }
+  .cb,
+  .label,
   .cb2 {
-    border-radius: 5px;
-    background-color: rgb(255, 255, 255);
-    font-size:24px;
-    padding: 5px;
-    width: 100%;
-    
+    font-size: 22px;
   }
-  
-  .cb2:hover,
-  .cb2:active {
-    outline: none;
-    border-color: #9ecaed;
-    box-shadow: 0 0 10px #9ecaed;
+  .labelhead {
+    font-size: 23px;
   }
-  .cb2:focus {
-    outline: none;
-    border-color: #9ecaed;
-    border-bottom-width:5px;
-    border-bottom-color:#1291f9 ;
-  }
-  .labelhead{
-    display: block;
-    font-size:27px;
-    border-radius: 5px;
-    background-color: rgb(82, 225, 244);
-    padding: 5px;
-    text-align: center;
-  }
+}

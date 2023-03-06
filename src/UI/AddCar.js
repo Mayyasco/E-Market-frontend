@@ -163,7 +163,7 @@ const AddCar = (props) => {
         <IN label='address' ref={ref_address} />
         <label className={classes.label}> other details</label>
         <textarea className={classes.cb2} ref={ref_other_details}></textarea>
-        <label className={classes.label} style={{ marginTop: "12px" }}> image:</label>
+        <label className={classes.label} style={{ marginTop: "0px" }}> image:</label>
         <input type="file" accept="image/png, image/jpeg" ref={ref_image} />
         <Button onClick={(e) => handleSubmit(
           ref_make, ref_model, ref_trim,
