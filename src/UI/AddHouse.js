@@ -5,6 +5,8 @@ import Button from '../components/Button';
 import classes from './Add.module.css';
 import aucontext from '../au-context';
 import { useContext, useState } from 'react';
+import Cookies from 'universal-cookie';
+import { useNavigate } from "react-router-dom";
 
 const AddHouse = (props) => {
   const ref_bn = React.createRef();
@@ -21,7 +23,8 @@ const AddHouse = (props) => {
   const ref_image = React.createRef();
   const ctx = useContext(aucontext);
   const [validation, setValidation] = useState(["", "", "", "", "", "", "", ""]);
-
+  const cookies = new Cookies();
+  const navigate = useNavigate();
   function handleSubmit(ref_bn, ref_state, ref_city,
     ref_street, ref_zip, ref_area,
     ref_bed, ref_bath, ref_other_details, ref_cost, ref_fo, e) {
@@ -34,9 +37,13 @@ const AddHouse = (props) => {
     if (!/^[0-9]+$/.test(area)) { area = 0 }
     if (!/^[0-9]+$/.test(bed)) { bed = 0; }
     if (!/^[0-9]+$/.test(bath)) { bath = 0; }
+    const token = cookies.get("token");
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       body: JSON.stringify({
         "bn": ref_bn.current.value,
         "state": ref_state.current.value,
@@ -55,6 +62,12 @@ const AddHouse = (props) => {
       .then(response => {
         if (response.ok || response.status === 400)
           return response.json();
+        //-------------------------
+        else if (response.status === 403) {
+          alert("you are not signed please sign in");
+          navigate("/");
+        }
+        //-------------------------
         else {
           alert("something went wrong please try again later");
           return -1;
@@ -105,7 +118,7 @@ const AddHouse = (props) => {
               formData.append("file", ref_image.current.files[0]);
               formData.append("id", data.id);
               formData.append("ty", "house");
-              fetch("/emarket/addimage", { method: 'POST', body: formData })
+              fetch("/emarket/addimage", { method: 'POST', body: formData, headers: { 'Authorization': 'Bearer ' + token } })
                 .then(response => {
                   if (response.ok) return true;
                   else return false;
@@ -114,18 +127,20 @@ const AddHouse = (props) => {
                     alert('A new house has been added successfully');
                   }
                   else {
-                    alert('new house has been added successfully but an error in uploading the image you can add later');
+                    alert('new house has been added successfully but an error in uploading the image,' +
+                      ' you can add later, please be sure the image size less than 2MB');
                   }
-                  ref_image.current.value = '';
-                  setValidation(["", "", "", "", "", "", "", ""]);
-
+                  /*ref_image.current.value = '';
+                  setValidation(["", "", "", "", "", "", "", ""]);*/
+                  props.mine_return();
                 });
             }
             //--------------------------------------------
             else {
               alert('A new house has been added successfully');
-              ref_image.current.value = '';
-              setValidation(["", "", "", "", "", "", "", ""]);
+              /*ref_image.current.value = '';
+              setValidation(["", "", "", "", "", "", "", ""]);*/
+              props.mine_return();
             }
           }
         }

@@ -11,7 +11,7 @@ import phone_image from '../components/images/phone.png';
 import aucontext from '../au-context';
 import { useNavigate } from "react-router-dom";
 import { forwardRef, useImperativeHandle } from 'react';
-
+import Cookies from 'universal-cookie';
 
 
 
@@ -31,7 +31,37 @@ const SignUp = forwardRef((props, ref) => {
     const [validation, setValidation] = useState(["", "", ""]);
     const ctx = useContext(aucontext);
     const navigate = useNavigate();
-
+    const cookies = new Cookies();
+    //---------------------------------------------------------------------
+    function signin(email, password) {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "email": email,
+                "password": password
+            })
+        };
+        fetch('/emarket/signin', requestOptions)
+            .then(response => {
+                if (response.ok)
+                    return response.json();
+                else {
+                    alert("something went wrong please try again later");
+                    setValidation(["", "", ""]);
+                    return -1;
+                }
+            })
+            .then(data => {
+                if (data !== -1) {
+                    cookies.set('token', data.token, { path: '/', expires: new Date(Date.now() + 604800000000) });
+                    ctx.set_id(data.id);
+                    navigate("/main");
+                }
+            }
+            );
+    }
+    //---------------------------------------------------------------------
     function handleSubmit(ref_name, ref_email, ref_password,
         ref_address, ref_phone, ref_password2, su, e) {
         e.preventDefault();
@@ -39,7 +69,9 @@ const SignUp = forwardRef((props, ref) => {
         if (ref_password.current.value !== ref_password2.current.value) { password = ""; }
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 "name": ref_name.current.value,
                 "email": ref_email.current.value,
@@ -54,6 +86,7 @@ const SignUp = forwardRef((props, ref) => {
                     return response.json();
                 else {
                     alert("something went wrong please try again later");
+                    setValidation(["", "", ""]);
                     return -1;
                 }
             })
@@ -72,10 +105,11 @@ const SignUp = forwardRef((props, ref) => {
                         setValidation(val);
                     }
                     else {
-                        localStorage.setItem("id3r5", data.id);
-                        ctx.set_id(data.id);
-                        alert('you signed up successfully');
-                        navigate("/main");
+                        if (data.id === -2) {
+                            alert("this email is exists please try another one");
+                            setValidation(["", "", ""]);
+                        }
+                        else signin(data.email, password);
                     }
                 }
             });

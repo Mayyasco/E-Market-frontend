@@ -13,10 +13,13 @@ import del from './images/del.png';
 import upd from './images/upd.png';
 import UpdateHouse from '../UI/UpdateHouse';
 import ViewHouse from '../UI/ViewHouse';
+import Cookies from 'universal-cookie';
 
 const HouseItem = (props) => {
+  const cookies = new Cookies();
   const [info, setInfo] = useState([props.bn, props.street, props.city, props.state, props.cost
     , props.baths, props.beds, props.area, props.fo, props.other, props.zip]);
+  const [userInfo, setUserInfo] = useState(['', '', '', '']);
   const houseRef = useRef();
   const housevRef = useRef();
   const [img, setImg] = useState(im);
@@ -29,17 +32,25 @@ const HouseItem = (props) => {
   let icon = "";
   //--------------------------------------------------------------
   useEffect(() => {
-    fetch("/emarket/getimage/" + props.id + "/house")
+    const token = cookies.get("token");
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    };
+    fetch("/emarket/getimage/" + props.id + "/house", requestOptions)
       .then(response => {
         if (response.ok)
           return response.blob();
         else {
-          //alert("could not retrieve the image for this car " + props.make + " " + props.model + " " + props.trim);
+          //alert("could not retrieve the image for this house " + props.make + " " + props.model + " " + props.trim);
           return -1;
         }
       })
       .then(data => {
-        if (data !== -1) {
+        if (data !== -1 && data.size > 0) {
           const imageObjectURL = URL.createObjectURL(data);
           setImg(imageObjectURL);
         }
@@ -54,9 +65,16 @@ const HouseItem = (props) => {
     icon = <img src={h} alt="heart" onClick={heart} className={classes.heart} />;
   //------------------------------------------
   useEffect(() => {
-
+    const token = cookies.get("token");
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    };
     if (props.icon !== "m") {
-      fetch("/emarket/chechlikehouse?id_house=" + house_id + "&id_user=" + user_id)
+      fetch("/emarket/chechlikehouse?id_house=" + house_id + "&id_user=" + user_id, requestOptions)
         .then(response => {
           if (response.ok)
             return response.json();
@@ -75,14 +93,52 @@ const HouseItem = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  //------------------------------------------
+  //-----------------------------------------------------------------
+  useEffect(() => {
+    const token = cookies.get("token");
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+    };
+    fetch('/emarket/gethouseowner/' + props.id, requestOptions)
+      .then(response => {
+        if (response.ok)
+          return response.json();
+        else {
+          alert("something went wrong please try again later");
+          return -1;
+        }
+      })
+      .then(data => {
+        if (data !== -1) {
+          let info = ['', '', '', ''];
+          info[0] = data.name;
+          info[1] = data.email;
+          info[2] = data.address;
+          info[3] = data.phone;
+          setUserInfo(info);
+        }
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  //-----------------------------------------------------------------
   function dl() {
     const response = window.confirm("Are you sure you want to delete the house?");
     if (response) {
       const id = props.id;
       let houses = [...props.houselist];
-      fetch('/emarket/deletehouse/' + id, { method: 'DELETE' })
+      const token = cookies.get("token");
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      };
+      fetch('/emarket/deletehouse/' + id + '/' + ctx.log_id, requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");
@@ -112,7 +168,8 @@ const HouseItem = (props) => {
     housevRef.current.updateinput(
       info[0], info[3], info[2], info[1],
       info[10], info[4], info[7], info[6],
-      info[9], info[8], info[5], img
+      info[9], info[8], info[5], img,
+      userInfo[0], userInfo[1], userInfo[2], userInfo[3]
     );
   }
   function update_h() {
@@ -128,8 +185,16 @@ const HouseItem = (props) => {
       setOverlay_hv("0");
   }
   function heart() {
+    const token = cookies.get("token");
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    };
     if (h === heart_empty) {
-      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=add", { method: 'POST' })
+      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=add", requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");
@@ -137,7 +202,7 @@ const HouseItem = (props) => {
         });
     }
     else {
-      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=del", { method: 'POST' })
+      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=del", requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");

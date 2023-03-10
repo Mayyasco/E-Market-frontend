@@ -10,7 +10,7 @@ import password_image from '../components/images/pw.png';
 import phone_image from '../components/images/phone.png';
 import aucontext from '../au-context';
 import { forwardRef, useImperativeHandle } from 'react';
-
+import Cookies from 'universal-cookie';
 
 
 
@@ -25,6 +25,7 @@ const SignUp = forwardRef((props, ref) => {
             }
         };
     });
+    const cookies = new Cookies();
     const [validation, setValidation] = useState(["", ""]);
     const [validationPass, setValidationPass] = useState(["", ""]);
     const ctx = useContext(aucontext);
@@ -40,9 +41,13 @@ const SignUp = forwardRef((props, ref) => {
             setValidationPass(v);
             return;
         }
+        const token = cookies.get("token");
         const requestOptions = {
             method: 'Post',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
             body: JSON.stringify({
                 "oldP": ref_password_old.current.value,
                 "newP": ref_password_new1.current.value
@@ -79,9 +84,13 @@ const SignUp = forwardRef((props, ref) => {
     //-----------------------------------------------------------------------------
     function handleSubmit(ref_name, ref_email, ref_address, ref_phone, e) {
         e.preventDefault();
+        const token = cookies.get("token");
         const requestOptions = {
             method: 'Post',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
             body: JSON.stringify({
                 "name": ref_name.current.value,
                 "email": ref_email.current.value,
@@ -91,12 +100,14 @@ const SignUp = forwardRef((props, ref) => {
             })
         };
         let id = ctx.log_id;
+
         fetch("/emarket/updateuser/" + id, requestOptions)
             .then(response => {
                 if (response.ok || response.status === 400)
                     return response.json();
                 else {
                     alert("something went wrong please try again later");
+                    setValidation(["", ""]);
                     return -1;
                 }
             })

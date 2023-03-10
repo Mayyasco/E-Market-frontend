@@ -4,6 +4,7 @@ import Card from '../components/Card';
 import IN from '../components/IN';
 import Button from '../components/Button';
 import classes from './Add.module.css';
+import Cookies from 'universal-cookie';
 import { forwardRef, useImperativeHandle } from 'react';
 
 const UpdateCar = forwardRef((props, ref) => {
@@ -25,6 +26,7 @@ const UpdateCar = forwardRef((props, ref) => {
       }
     };
   });
+  const cookies = new Cookies();
   const [validation, setValidation] = useState(["", "", "", "", ""]);
   const ref_make = React.createRef();
   const ref_model = React.createRef();
@@ -50,9 +52,13 @@ const UpdateCar = forwardRef((props, ref) => {
     if (!/^[0-9]*$/.test(cost)) { cost = 0; }
     if (!/^[0-9]*$/.test(mileage)) { mileage = 0 }
     if (!/^\d{4}$/.test(year)) { year = 0; }
+    const token = cookies.get("token");
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       body: JSON.stringify({
         "make": ref_make.current.value,
         "model": ref_model.current.value,
@@ -107,7 +113,7 @@ const UpdateCar = forwardRef((props, ref) => {
               formData.append("file", ref_image.current.files[0]);
               formData.append("id", data.id);
               formData.append("ty", "car");
-              fetch("/emarket/addimage", { method: 'POST', body: formData })
+              fetch("/emarket/addimage", { method: 'POST', body: formData, headers: { 'Authorization': 'Bearer ' + token } })
                 .then(response => {
                   if (response.ok) return true;
                   else return false;
@@ -116,8 +122,8 @@ const UpdateCar = forwardRef((props, ref) => {
                     alert('the car info has been updated successfully');
                   }
                   else {
-
-                    alert('the car info has been updated successfully but an error in uploading the image you can add later');
+                    alert('the car info has been added successfully but an error in uploading the image,' +
+                      ' you can add later, please be sure the image size less than 2MB');
                   }
                   ref_image.current.value = '';
                   props.setAllInfo(inf);

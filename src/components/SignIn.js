@@ -7,8 +7,10 @@ import email_image from '../components/images/email.png';
 import password_image from '../components/images/pw.png';
 import aucontext from '../au-context';
 import { useNavigate } from "react-router-dom";
+import Cookies from 'universal-cookie';
 
 const SignIn = (props) => {
+    const cookies = new Cookies();
     const [validation, setValidation] = useState(["", ""]);
     const ctx = useContext(aucontext);
     const navigate = useNavigate();
@@ -35,27 +37,40 @@ const SignIn = (props) => {
         };
         fetch('/emarket/signin', requestOptions)
             .then(response => {
-                if (response.ok)
+                if (response.ok || response.status === 501)
                     return response.json();
                 else {
                     alert("something went wrong please try again later");
+                    setValidation(["", ""]);
                     return -1;
                 }
             })
             .then(data => {
+
                 if (data !== -1) {
-                    let tmp = JSON.parse(data);
-                    if (tmp === 0) {
-                        alert("Wrong Email or Password!!");
-                        setValidation(["", ""]);
+                    if (data.Exception) {
+                        if (data.Exception === "Bad credentials") {
+                            alert("Wrong Email or Password!!");
+                            setValidation(["", ""]);
+                        }
+                        else {
+                            alert("something went wrong please try again later");
+                            setValidation(["", ""]);
+                        }
                     }
-                    else {
-                        localStorage.setItem("id3r5", tmp);
-                        ctx.set_id(tmp);
+                    else if (data.id) {
+                        cookies.set('token', data.token, { path: '/', expires: new Date(Date.now() + 604800000000) });
+                        //localStorage.setItem("token", data.token);
+                        ctx.set_id(data.id);
                         navigate("/main");
                     }
+                    else {
+                        alert("something went wrong please try again later");
+                        setValidation(["", ""]);
+                    }
                 }
-            });
+            }
+            );
     }
     const ref_email_in = React.createRef();
     const ref_password_in = React.createRef();

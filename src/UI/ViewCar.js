@@ -11,7 +11,7 @@ const ViewCar = forwardRef((props, ref) => {
   const [img, setImg] = useState(im);
   useImperativeHandle(ref, () => {
     return {
-      updateinput: (m, mod, t, y, mi, c, b, co, o, tr, a, img) => {
+      updateinput: (m, mod, t, y, mi, c, b, co, o, tr, a, img, un, ue, ua, up) => {
         ref_make.current.value = m;
         ref_scroll.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
         ref_model.current.value = mod;
@@ -24,10 +24,16 @@ const ViewCar = forwardRef((props, ref) => {
         ref_other_details.current.value = o;
         ref_trim.current.value = t;
         ref_address.current.value = a;
+        name.current.value = un;
+        email.current.value = ue;
+        add.current.value = ua;
+        phone.current.value = up;
+
         setImg(img);
       }
     };
   });
+
   const ref_make = React.createRef();
   const ref_model = React.createRef();
   const ref_trim = React.createRef();
@@ -40,6 +46,11 @@ const ViewCar = forwardRef((props, ref) => {
   const ref_trans = React.createRef();
   const ref_address = React.createRef();
   const ref_scroll = React.createRef();
+  const name = React.createRef();
+  const email = React.createRef();
+  const add = React.createRef();
+  const phone = React.createRef();
+
   return (
     <div className="App" disabled={true}>
       <Card>
@@ -57,6 +68,11 @@ const ViewCar = forwardRef((props, ref) => {
         <IN label='address' ref={ref_address} disabled={true} />
         <label className={classes.label} > other details</label>
         <textarea className={classes.cb2} ref={ref_other_details} disabled={true}></textarea>
+        <label className={classes.labelhead} >owner info</label>
+        <IN label='Name' ref={name} disabled={true} />
+        <IN label='Email' ref={email} disabled={true} />
+        <IN label='Address' ref={add} disabled={true} />
+        <IN label='Phone' ref={phone} disabled={true} />
         <Button onClick={props.cancel}>OK</Button>
       </Card>
     </div>

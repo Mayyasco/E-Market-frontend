@@ -2,10 +2,13 @@ import React from 'react';
 import classes from './SearchCar.module.css';
 import clsx from 'clsx';
 import { useState } from 'react';
+import Cookies from 'universal-cookie';
+import { useNavigate } from "react-router-dom";
 
 const SearchCar = (props) => {
   const [validation, setValidation] = useState(["", "", "", ""]);
-
+  const cookies = new Cookies();
+  const navigate = useNavigate();
   function handleSubmit(props, ref_make,
     ref_year_min, ref_mileage_min, ref_cost_min,
     ref_year_max, ref_mileage_max, ref_cost_max,
@@ -30,9 +33,13 @@ const SearchCar = (props) => {
     let b = ""; let c = "";
     if (ref_body_type.current.value !== "All") b = ref_body_type.current.value;
     if (ref_condition.current.value !== "All") c = ref_condition.current.value;
+    const token = cookies.get("token");
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       body: JSON.stringify({
         "make": ref_make.current.value,
         "cond": c,
@@ -49,6 +56,12 @@ const SearchCar = (props) => {
       .then(response => {
         if (response.ok)
           return response.json();
+        //-------------------------
+        else if (response.status === 403) {
+          alert("you are not signed please sign in");
+          navigate("/");
+        }
+        //-------------------------
         else {
           alert("something went wrong please try again later");
           setValidation(["", "", "", ""]);

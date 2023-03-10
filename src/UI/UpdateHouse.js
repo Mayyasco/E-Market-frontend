@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import classes from './Add.module.css';
 import { forwardRef, useImperativeHandle } from 'react';
 import { useState } from 'react';
+import Cookies from 'universal-cookie';
 
 const UpdateHouse = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => {
@@ -25,6 +26,7 @@ const UpdateHouse = forwardRef((props, ref) => {
       }
     };
   });
+  const cookies = new Cookies();
   const [validation, setValidation] = useState(["", "", "", "", "", "", "", ""]);
   const ref_bn = React.createRef();
   const ref_state = React.createRef();
@@ -51,9 +53,13 @@ const UpdateHouse = forwardRef((props, ref) => {
     if (!/^[0-9]*$/.test(area)) { area = 0 }
     if (!/^[0-9]*$/.test(bed)) { bed = 0; }
     if (!/^[0-9]*$/.test(bath)) { bath = 0; }
+    const token = cookies.get("token");
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       body: JSON.stringify({
         "bn": ref_bn.current.value,
         "state": ref_state.current.value,
@@ -116,7 +122,7 @@ const UpdateHouse = forwardRef((props, ref) => {
               formData.append("file", ref_image.current.files[0]);
               formData.append("id", data.id);
               formData.append("ty", "house");
-              fetch("/emarket/addimage", { method: 'POST', body: formData })
+              fetch("/emarket/addimage", { method: 'POST', body: formData, headers: { 'Authorization': 'Bearer ' + token } })
                 .then(response => {
                   if (response.ok) return true;
                   else return false;
@@ -125,8 +131,8 @@ const UpdateHouse = forwardRef((props, ref) => {
                     alert('the house info has been updated successfully');
                   }
                   else {
-
-                    alert('the house info has been updated successfully but an error in uploading the image you can add later');
+                    alert('the house info has been added successfully but an error in uploading the image,' +
+                      ' you can add later, please be sure the image size less than 2MB');
                   }
                   ref_image.current.value = '';
                   props.setAllInfo(inf);

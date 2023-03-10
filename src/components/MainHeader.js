@@ -3,8 +3,10 @@ import aucontext from '../au-context';
 import logout from './images/logout.png';
 import clsx from 'clsx';
 import { useNavigate } from "react-router-dom";
+import Cookies from 'universal-cookie';
 
 const MainHeader = (props) => {
+    const cookies = new Cookies();
     const ctx = useContext(aucontext);
     const navigate = useNavigate();
     const [isActive, setIsActive] = useState(["", "active", "", "", "", "", "", "", "none", "none", ""]);
@@ -31,6 +33,10 @@ const MainHeader = (props) => {
         }
         props.mine();
     }
+    function mine_return() {
+        setIsActive(["", "active", "", "", "", "", "", "", "none", "none", ""]);
+        props.mine();
+    }
     function search_m_c() {
         if (isActive[2] === "") {
             setIsActive(["", "", "active", "", "", "", "", "active", "none", "none", ""]);
@@ -48,13 +54,55 @@ const MainHeader = (props) => {
         if (isActive[4] === "") {
             setIsActive(["", "", "", "", "active", "", "", "", "none", "none", "active"]);
         }
-        props.addCar();
+        const token = cookies.get("token");
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        };
+        fetch('/emarket/checkaddc', requestOptions)
+            .then(response => {
+                if (response.ok)
+                    props.addCar(mine_return);
+                else if (response.status === 403) {
+                    alert("you don't have access to this page, you add to many cars");
+                    setIsActive(["", "active", "", "", "", "", "", "", "none", "none", ""]);
+                    props.mine();
+                }
+                else {
+                    alert("something went wrong please try again later");
+                }
+            });
+
+
     }
     function add_m_h() {
         if (isActive[5] === "") {
             setIsActive(["", "", "", "", "", "active", "", "", "none", "none", "active"]);
         }
-        props.addHouse();
+        const token = cookies.get("token");
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        };
+        fetch('/emarket/checkaddh', requestOptions)
+            .then(response => {
+                if (response.ok)
+                    props.addHouse(mine_return);
+                else if (response.status === 403) {
+                    alert("you don't have access to this page, you add to many houses");
+                    setIsActive(["", "active", "", "", "", "", "", "", "none", "none", ""]);
+                    props.mine();
+                }
+                else {
+                    alert("something went wrong please try again later");
+                }
+            });
+
+
     }
     function my_info() {
         if (isActive[6] === "") {
@@ -85,8 +133,9 @@ const MainHeader = (props) => {
         setIsActive(tmp);
     }
     function signout() {
-        localStorage.setItem("id3r5", "0");
-        ctx.log_id = 0;
+        //localStorage.setItem("id3r5", "0");
+        cookies.set('token', "0", { path: '/' });
+        ctx.set_id("0");
         navigate("/");
     }
     return (

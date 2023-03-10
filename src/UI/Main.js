@@ -9,44 +9,63 @@ import SearchCarlist from './SearchCarlist';
 import SearchHouselist from './SearchHouselist';
 import Mine from './Mine';
 import Fav from './Fav';
+import Cookies from 'universal-cookie';
+import { useNavigate } from "react-router-dom";
 
 function Main(props) {
+    const cookies = new Cookies();
+    const navigate = useNavigate();
     const [child_state, setChild_state] = useState();
     const signRef = useRef();
     const ctx = useContext(aucontext);
+    //-----------------------------------------
+
     useEffect(() => {
-        let j = localStorage.getItem("id3r5");
-        if (j === "0" || !j || j === null);
-        else {
-            const requestOptions = {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-            };
-            fetch('/emarket/mine/' + j, requestOptions)
-                .then(response => {
-                    if (response.ok)
-                        return response.json();
-                    else {
-                        alert("something went wrong please try again later");
-                        return -1;
-                    }
-                })
-                .then(data => {
-                    if (data !== -1)
-                        setChild_state(<Mine my_list={data} icon={"m"} />);
-                });
-        }
-    }, []);
-    function f_myinfo() {
-        let id = ctx.log_id;
+
+        const token = cookies.get("token");
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        };
+        fetch('/emarket/mine/' + ctx.log_id, requestOptions)
+            .then(response => {
+                if (response.ok)
+                    return response.json();
+                else {
+                    alert("something went wrong please try again later");
+                    return -1;
+                }
+            })
+            .then(data => {
+                if (data !== -1)
+                    setChild_state(<Mine my_list={data} icon={"m"} />);
+            });
+        // eslint-disable-next-line
+    }, []);
+    //-----------------------------------------------------------------
+    function f_myinfo() {
+        let id = ctx.log_id;
+        const token = cookies.get("token");
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
         };
         fetch('/emarket/getuser/' + id, requestOptions)
             .then(response => {
                 if (response.ok)
                     return response.json();
+                //-------------------------
+                else if (response.status === 403) {
+                    alert("you are not signed please sign in");
+                    navigate("/");
+                }
+                //-------------------------
                 else {
                     alert("something went wrong please try again later");
                     return -1;
@@ -60,11 +79,11 @@ function Main(props) {
             });
 
     }
-    function addCar() {
-        setChild_state(<AddCar />);
+    function addCar(mine_return) {
+        setChild_state(<AddCar mine_return={mine_return} />);
     }
-    function addHouse() {
-        setChild_state(<AddHouse />);
+    function addHouse(mine_return) {
+        setChild_state(<AddHouse mine_return={mine_return} />);
     }
     function searchHouse() {
         setChild_state(<SearchHouselist />);
@@ -73,14 +92,24 @@ function Main(props) {
         setChild_state(<SearchCarlist />);
     }
     function mine() {
+        const token = cookies.get("token");
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
         };
         fetch('/emarket/mine/' + ctx.log_id, requestOptions)
             .then(response => {
                 if (response.ok)
                     return response.json();
+                //-------------------------
+                else if (response.status === 403) {
+                    alert("you are not signed please sign in");
+                    navigate("/");
+                }
+                //-------------------------
                 else {
                     alert("something went wrong please try again later");
                     return -1;
@@ -92,14 +121,24 @@ function Main(props) {
             });
     }
     function fav() {
+        const token = cookies.get("token");
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
         };
         fetch('/emarket/fav/' + ctx.log_id, requestOptions)
             .then(response => {
                 if (response.ok)
                     return response.json();
+                //-------------------------
+                else if (response.status === 403) {
+                    alert("you are not signed please sign in");
+                    navigate("/");
+                }
+                //-------------------------
                 else {
                     alert("something went wrong please try again later");
                     return -1;

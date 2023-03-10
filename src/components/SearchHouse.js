@@ -1,8 +1,11 @@
 import React from 'react';
 import classes from './SearchHouse.module.css';
 import { useState } from 'react';
+import Cookies from 'universal-cookie';
+import { useNavigate } from "react-router-dom";
 
 const SearchHouse = (props) => {
+  const navigate = useNavigate();
   const [validation, setValidation] = useState(["", "", ""]);
   function handleSubmit(props, ref_state,
     ref_city, ref_beds, ref_cost_min,
@@ -25,9 +28,15 @@ const SearchHouse = (props) => {
       return;
     }
     //-------------------------------------------------------------
+    const cookies = new Cookies();
+
+    const token = cookies.get("token");
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       body: JSON.stringify({
         "state": ref_state.current.value,
         "city": ref_city.current.value,
@@ -43,6 +52,12 @@ const SearchHouse = (props) => {
       .then(response => {
         if (response.ok)
           return response.json();
+        //-------------------------
+        else if (response.status === 403) {
+          alert("you are not signed please sign in");
+          navigate("/");
+        }
+        //-------------------------
         else {
           alert("something went wrong please try again later");
           setValidation(["", "", ""]);

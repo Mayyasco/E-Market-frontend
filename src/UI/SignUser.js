@@ -8,8 +8,7 @@ const SignUser = (props) => {
 
   return (
 
-    <div >
-
+    <div>
       <div className={classes.header1}>
         <div className={classes.header2}>
           E-Market..

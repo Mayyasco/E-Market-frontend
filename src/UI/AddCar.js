@@ -5,6 +5,9 @@ import Button from '../components/Button';
 import classes from './Add.module.css';
 import aucontext from '../au-context';
 import { useContext, useState } from 'react';
+import Cookies from 'universal-cookie';
+import { useNavigate } from "react-router-dom";
+
 
 const AddCar = (props) => {
   const ref_make = React.createRef();
@@ -20,6 +23,8 @@ const AddCar = (props) => {
   const ref_address = React.createRef();
   const ref_image = React.createRef();
   const ctx = useContext(aucontext);
+  const navigate = useNavigate();
+  const cookies = new Cookies();
   const [validation, setValidation] = useState(["", "", "", "", ""]);
   function handleSubmit(ref_make, ref_model, ref_trim,
     ref_year, ref_mileage, ref_trans,
@@ -32,9 +37,13 @@ const AddCar = (props) => {
     if (!/^[0-9]+$/.test(cost)) { cost = 0; }
     if (!/^[0-9]+$/.test(mileage)) { mileage = 0 }
     if (!/^\d{4}$/.test(year)) { year = 0; }
+    const token = cookies.get("token");
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       body: JSON.stringify({
         "make": ref_make.current.value,
         "model": ref_model.current.value,
@@ -53,6 +62,12 @@ const AddCar = (props) => {
       .then(response => {
         if (response.ok || response.status === 400)
           return response.json();
+        //-------------------------
+        else if (response.status === 403) {
+          alert("you are not signed please sign in");
+          navigate("/");
+        }
+        //-------------------------
         else {
           alert("something went wrong please try again later");
           return -1;
@@ -98,7 +113,7 @@ const AddCar = (props) => {
               formData.append("file", ref_image.current.files[0]);
               formData.append("id", data.id);
               formData.append("ty", "car");
-              fetch("/emarket/addimage", { method: 'POST', body: formData })
+              fetch("/emarket/addimage", { method: 'POST', body: formData, headers: { 'Authorization': 'Bearer ' + token } })
                 .then(response => {
                   if (response.ok) return true;
                   else return false;
@@ -107,17 +122,22 @@ const AddCar = (props) => {
                     alert('A new car has been added successfully');
                   }
                   else {
-                    alert('new car has been added successfully but an error in uploading the image you can add later');
+                    alert('new car has been added successfully but an error in uploading the image,' +
+                      ' you can add later, please be sure the image size less than 2MB');
                   }
                 });
-              ref_image.current.value = '';
-              setValidation(["", "", "", "", ""]);
+              /*ref_image.current.value = '';
+              setValidation(["", "", "", "", ""]);*/
+              props.mine_return();
+
             }
             //--------------------------------------------
             else {
               alert('A new car has been added successfully');
-              ref_image.current.value = '';
-              setValidation(["", "", "", "", ""]);
+              /*ref_image.current.value = '';
+              setValidation(["", "", "", "", ""]);*/
+              props.mine_return();
+
             }
 
           }

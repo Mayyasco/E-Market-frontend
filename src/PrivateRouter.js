@@ -1,7 +1,10 @@
-import { React } from "react";
+import { React, useContext } from "react";
 import { Navigate } from "react-router-dom";
+import aucontext from './au-context';
+
 const PrivateRouter = ({ children }) => {
-    let j = localStorage.getItem("id3r5");
+    const ctx = useContext(aucontext);
+    let j = ctx.log_id;
     if (j === "0" || !j || j === null)
         return <Navigate to="/" />;
     else

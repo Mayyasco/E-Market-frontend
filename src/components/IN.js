@@ -10,7 +10,7 @@ const IN = React.forwardRef((props, ref) => (
       type={props.type || 'text'}
       ref={ref}
       disabled={props.disabled}
-    //onChange={props.onChange}
+      value={props.value}
     />
   </div>
 ));

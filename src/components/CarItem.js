@@ -12,10 +12,12 @@ import upd from './images/upd.png';
 import aucontext from '../au-context';
 import UpdateCar from '../UI/UpdateCar';
 import ViewCar from '../UI/ViewCar';
+import Cookies from 'universal-cookie';
 
 const CarItem = (props) => {
   const [info, setInfo] = useState([props.year, props.mileage, props.address, props.cost, props.make
     , props.model, props.trim, props.body_type, props.trans, props.other, props.cond]);
+  const [userInfo, setUserInfo] = useState(['', '', '', '']);
   const carRef = useRef();
   const carvRef = useRef();
   const [img, setImg] = useState(im);
@@ -26,9 +28,18 @@ const CarItem = (props) => {
   const car_id = props.id;
   const user_id = ctx.log_id;
   let icon = "";
+  const cookies = new Cookies();
   //--------------------------------------------------------------
   useEffect(() => {
-    fetch("/emarket/getimage/" + props.id + "/car")
+    const token = cookies.get("token");
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    };
+    fetch("/emarket/getimage/" + props.id + "/car", requestOptions)
       .then(response => {
         if (response.ok)
           return response.blob();
@@ -38,7 +49,7 @@ const CarItem = (props) => {
         }
       })
       .then(data => {
-        if (data !== -1) {
+        if (data !== -1 && data.size > 0) {
           const imageObjectURL = URL.createObjectURL(data);
           setImg(imageObjectURL);
         }
@@ -53,7 +64,15 @@ const CarItem = (props) => {
     icon = <img src={h} alt="heart" onClick={heart} className={classes.heart} />;
   //------------------------------------------
   useEffect(() => {
-    fetch("/emarket/chechlikecar?id_car=" + car_id + "&id_user=" + user_id)
+    const token = cookies.get("token");
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    };
+    fetch("/emarket/chechlikecar?id_car=" + car_id + "&id_user=" + user_id, requestOptions)
       .then(response => {
         if (response.ok)
           return response.json();
@@ -71,10 +90,51 @@ const CarItem = (props) => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  //------------------------------------------
+
+  //-----------------------------------------------------------------
+  useEffect(() => {
+    const token = cookies.get("token");
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+    };
+    fetch('/emarket/getcarowner/' + props.id, requestOptions)
+      .then(response => {
+        if (response.ok)
+          return response.json();
+        else {
+          alert("something went wrong please try again later");
+          return -1;
+        }
+      })
+      .then(data => {
+        if (data !== -1) {
+          let info = ['', '', '', ''];
+          info[0] = data.name;
+          info[1] = data.email;
+          info[2] = data.address;
+          info[3] = data.phone;
+          setUserInfo(info);
+        }
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  //-----------------------------------------------------------------
   function heart() {
+    const token = cookies.get("token");
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    };
     if (h === heart_empty) {
-      fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=add", { method: 'POST' })
+
+      fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=add", requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");
@@ -82,7 +142,7 @@ const CarItem = (props) => {
         });
     }
     else {
-      fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=del", { method: 'POST' })
+      fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=del", requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");
@@ -103,7 +163,15 @@ const CarItem = (props) => {
     if (response) {
       const id = props.id;
       let cars = [...props.carlist];
-      fetch('/emarket/deletecar/' + id, { method: 'DELETE' })
+      const token = cookies.get("token");
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      };
+      fetch('/emarket/deletecar/' + id + '/' + ctx.log_id, requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");
@@ -132,7 +200,8 @@ const CarItem = (props) => {
     carvRef.current.updateinput(
       info[4], info[5], info[6], info[0],
       info[1], info[10], info[7], info[3],
-      info[9], info[8], info[2], img
+      info[9], info[8], info[2], img,
+      userInfo[0], userInfo[1], userInfo[2], userInfo[3]
     );
   }
   function update_c() {
@@ -155,7 +224,7 @@ const CarItem = (props) => {
         /></div>
       <div className={classes.overlay} style={{ width: overlay_cv + "%" }}>
         <ViewCar className={classes.overlayContent} cancel={update_cv}
-          ref={carvRef}
+          ref={carvRef} id={props.id}
         /></div>
       <CardItem>
 

@@ -4,6 +4,7 @@ import CarItem from '../components/CarItem';
 import HouseItem from '../components/HouseItem';
 
 const Mine = (props) => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     const [cars, setCars] = useState(props.my_list[0]);
     const [houses, setHouses] = useState(props.my_list[1]);
     function del_car(cars) {
