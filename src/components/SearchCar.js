@@ -43,13 +43,13 @@ const SearchCar = (props) => {
       body: JSON.stringify({
         "make": ref_make.current.value,
         "cond": c,
-        "body_type": b,
-        "year_min": ref_year_min.current.value,
-        "cost_min": ref_cost_min.current.value,
-        "mileage_min": ref_mileage_min.current.value,
-        "year_max": ref_year_max.current.value,
-        "cost_max": ref_cost_max.current.value,
-        "mileage_max": ref_mileage_max.current.value,
+        "bodyType": b,
+        "yearMin": ref_year_min.current.value,
+        "costMin": ref_cost_min.current.value,
+        "mileageMin": ref_mileage_min.current.value,
+        "yearMax": ref_year_max.current.value,
+        "costMax": ref_cost_max.current.value,
+        "mileageMax": ref_mileage_max.current.value,
       })
     };
     fetch('/emarket/searchcar', requestOptions)

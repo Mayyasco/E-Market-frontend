@@ -44,8 +44,8 @@ const SearchHouse = (props) => {
         "area": ref_area.current.value,
         "baths": ref_baths.current.value,
         "beds": ref_beds.current.value,
-        "cost_min": ref_cost_min.current.value,
-        "cost_max": ref_cost_max.current.value
+        "costMin": ref_cost_min.current.value,
+        "costMax": ref_cost_max.current.value
       })
     };
     fetch('/emarket/searchhouse', requestOptions)

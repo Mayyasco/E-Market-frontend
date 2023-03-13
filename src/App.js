@@ -50,6 +50,7 @@ function App() {
           });
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (log_id_state !== '-1') returned =

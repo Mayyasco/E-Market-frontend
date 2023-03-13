@@ -74,7 +74,7 @@ const HouseItem = (props) => {
       }
     };
     if (props.icon !== "m") {
-      fetch("/emarket/chechlikehouse?id_house=" + house_id + "&id_user=" + user_id, requestOptions)
+      fetch("/emarket/chechlikehouse?idHouse=" + house_id + "&idUser=" + user_id, requestOptions)
         .then(response => {
           if (response.ok)
             return response.json();
@@ -194,7 +194,7 @@ const HouseItem = (props) => {
       }
     };
     if (h === heart_empty) {
-      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=add", requestOptions)
+      fetch("/emarket/likehouse?idHouse=" + house_id + "&idUser=" + user_id + "&act=add", requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");
@@ -202,7 +202,7 @@ const HouseItem = (props) => {
         });
     }
     else {
-      fetch("/emarket/likehouse?id_house=" + house_id + "&id_user=" + user_id + "&act=del", requestOptions)
+      fetch("/emarket/likehouse?idHouse=" + house_id + "&idUser=" + user_id + "&act=del", requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");

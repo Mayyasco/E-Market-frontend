@@ -11,6 +11,7 @@ const IN_sign = React.forwardRef((props, ref) => (
       ref={ref}
       placeholder={props.placeholder}
       value={props.value}
+      disabled={props.disabled}
     />
   </div>
 ));

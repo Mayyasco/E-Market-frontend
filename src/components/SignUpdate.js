@@ -147,7 +147,7 @@ const SignUp = forwardRef((props, ref) => {
                 <label className={classes.labelhead}>Update your info</label>
                 <INSign placeholder='Name' alt='name' src={name_image} ref={ref_name} value={props.value_name} />
                 <span className={classes.span}>{validation[0]}</span>
-                <INSign placeholder='Email' alt='email' type="email" src={email_image} ref={ref_email} value={props.value_email} />
+                <INSign placeholder='Email' alt='email' type="email" src={email_image} ref={ref_email} value={props.value_email} disabled={true} />
                 <span className={classes.span}>{validation[1]}</span>
                 <INSign placeholder='Address' alt='address' src={address_image} ref={ref_address} value={props.value_address} />
                 <INSign placeholder='Phone' alt='phone' src={phone_image} ref={ref_phone} value={props.value_phone} />

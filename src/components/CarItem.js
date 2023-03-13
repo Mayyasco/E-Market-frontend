@@ -72,7 +72,7 @@ const CarItem = (props) => {
         'Authorization': 'Bearer ' + token
       }
     };
-    fetch("/emarket/chechlikecar?id_car=" + car_id + "&id_user=" + user_id, requestOptions)
+    fetch("/emarket/chechlikecar?idCar=" + car_id + "&idUser=" + user_id, requestOptions)
       .then(response => {
         if (response.ok)
           return response.json();
@@ -134,7 +134,7 @@ const CarItem = (props) => {
     };
     if (h === heart_empty) {
 
-      fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=add", requestOptions)
+      fetch("/emarket/likecar?idCar=" + car_id + "&idUser=" + user_id + "&act=add", requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");
@@ -142,7 +142,7 @@ const CarItem = (props) => {
         });
     }
     else {
-      fetch("/emarket/likecar?id_car=" + car_id + "&id_user=" + user_id + "&act=del", requestOptions)
+      fetch("/emarket/likecar?idCar=" + car_id + "&idUser=" + user_id + "&act=del", requestOptions)
         .then(response => {
           if (!response.ok)
             alert("something went wrong please try again later");
